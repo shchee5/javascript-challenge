@@ -2,18 +2,20 @@ const tableData = data;
 
 var tbody = d3.select("tbody");
 
-data.forEach(function(buildTable) {
-  
-  var row = tbody.append("tr");
-  
-  Object.entries(buildTable).forEach(function([key, value]) {
-    var cell = row.append("td");
-    cell.text(value);
+function buildOriginalTable() {
+  data.forEach(originalData =>  {
+    var row = tbody.append("tr");
+    Object.entries(originalData).forEach(([_, value]) => {
+      var cell = row.append("td");
+      cell.text(value);
+    });  
   });
-  
-});
+};
+
+buildOriginalTable();
 
 var button = d3.select("#filter-btn");
+
 button.on("click",function() {
     
     d3.event.preventDefault();
@@ -25,27 +27,32 @@ button.on("click",function() {
     var CountryInput = d3.select("#country").property("value");
     var ShapeInput = d3.select("#shape").property("value");
 
-    var filteredData = data;
+    if (DateInput == "" && CityInput == "" && StateInput == "" && CountryInput == "" && ShapeInput == "") {
+      buildOriginalTable();
+      return;
+    }
     
+    var filteredData = data;
+
     if(DateInput) {
-      filteredData = data.filter(data => data.datetime === DateInput);
+      filteredData = filteredData.filter(data => data.datetime === DateInput);
     }
     if(CityInput) {
-      filteredData = data.filter(data => data.city === CityInput);
+      filteredData = filteredData.filter(data => data.city === CityInput);
     }
     if(StateInput) {
-      filteredData = data.filter(data => data.state === StateInput);
+      filteredData = filteredData.filter(data => data.state === StateInput);
     }
     if(CountryInput) {
-      filteredData = data.filter(data => data.country === CountryInput);
+      filteredData = filteredData.filter(data => data.country === CountryInput);
     }
     if(ShapeInput) {
-      filteredData = data.filter(data => data.shape === ShapeInput);
+      filteredData = filteredData.filter(data => data.shape === ShapeInput);
     }
 
-    filteredData.forEach(function(newData) {
+    filteredData.forEach(newData => {
       var row = tbody.append("tr");
-      Object.entries(newData).forEach(function([key, value]) {
+      Object.entries(newData).forEach(([_, value]) => {
         var cell = row.append("td");
         cell.text(value);
       });
